@@ -7,6 +7,10 @@
 
 import UIKit
 
+import Web3
+import Web3ContractABI
+import Web3PromiseKit
+
 class FarmViewController: UIViewController {
 
     enum CellTypes {
@@ -25,7 +29,35 @@ class FarmViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = "Pools"
+        // hardcoded pickle chef for now
+        let datasource = EtherscanDataSource()
+        datasource.getABI(address: "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d") { (jsonABIData) in
+            
+            do {
+                let web3 = Web3(rpcURL: "https://mainnet.infura.io/v3/\(Secrets().infuraProjectId)")
+
+                let contractAddress = try EthereumAddress(hex: "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d", eip55: true)
+                if let contractJsonABI = jsonABIData {
+                    // You can optionally pass an abiKey param if the actual abi is nested and not the top level element of the json
+                    let contract = try web3.eth.Contract(json: contractJsonABI, abiKey: nil, address: contractAddress)
+                    firstly {
+                        contract["poolLength"]!().call()
+                    }.done { outputs in
+                        self.title = "\(outputs.values.first ?? 0) Pools"
+                    }.catch { error in
+                        print(error)
+                    }
+                    
+                }
+            } catch let error {
+                print(error.localizedDescription)
+            }
+
+            
+        } failure: { (error) in
+            print(error?.localizedDescription ?? "Unknown error")
+        }
+
     }
     
 

@@ -3,10 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A3B0F76252A409D00F953DA /* Web3PromiseKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0A3B0F75252A409D00F953DA /* Web3PromiseKit */; };
+		0A3B0F78252A409D00F953DA /* Web3ContractABI in Frameworks */ = {isa = PBXBuildFile; productRef = 0A3B0F77252A409D00F953DA /* Web3ContractABI */; };
+		0A3B0F7A252A409D00F953DA /* Web3 in Frameworks */ = {isa = PBXBuildFile; productRef = 0A3B0F79252A409D00F953DA /* Web3 */; };
+		0A3B0F7E252A411500F953DA /* EtherscanDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3B0F7D252A411500F953DA /* EtherscanDataSource.swift */; };
+		0A3B0F86252A48FD00F953DA /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3B0F85252A48FD00F953DA /* Secrets.swift */; };
 		0A4A86EE2529438700F03D12 /* FarmsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A86ED2529438700F03D12 /* FarmsViewController.swift */; };
 		0A4A86F1252945F200F03D12 /* FarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A86F0252945F200F03D12 /* FarmViewController.swift */; };
 		0A64080E252955BC004C1381 /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A64080D252955BC004C1381 /* Pool.swift */; };
@@ -18,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A3B0F7D252A411500F953DA /* EtherscanDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EtherscanDataSource.swift; sourceTree = "<group>"; };
+		0A3B0F85252A48FD00F953DA /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		0A4A86ED2529438700F03D12 /* FarmsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmsViewController.swift; sourceTree = "<group>"; };
 		0A4A86F0252945F200F03D12 /* FarmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmViewController.swift; sourceTree = "<group>"; };
 		0A64080D252955BC004C1381 /* Pool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pool.swift; sourceTree = "<group>"; };
@@ -35,12 +42,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A3B0F7A252A409D00F953DA /* Web3 in Frameworks */,
+				0A3B0F78252A409D00F953DA /* Web3ContractABI in Frameworks */,
+				0A3B0F76252A409D00F953DA /* Web3PromiseKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A3B0F7C252A410400F953DA /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				0A3B0F7D252A411500F953DA /* EtherscanDataSource.swift */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
 		0A64080C252955A7004C1381 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -68,6 +86,7 @@
 		0AD5491925291BAE0003C261 /* MobileFarmInfo */ = {
 			isa = PBXGroup;
 			children = (
+				0A3B0F7C252A410400F953DA /* DataSources */,
 				0A64080C252955A7004C1381 /* Models */,
 				0AD5491A25291BAE0003C261 /* AppDelegate.swift */,
 				0AD5491C25291BAE0003C261 /* SceneDelegate.swift */,
@@ -77,6 +96,7 @@
 				0AD5492825291BB20003C261 /* Info.plist */,
 				0A4A86ED2529438700F03D12 /* FarmsViewController.swift */,
 				0A4A86F0252945F200F03D12 /* FarmViewController.swift */,
+				0A3B0F85252A48FD00F953DA /* Secrets.swift */,
 			);
 			path = MobileFarmInfo;
 			sourceTree = "<group>";
@@ -97,6 +117,11 @@
 			dependencies = (
 			);
 			name = MobileFarmInfo;
+			packageProductDependencies = (
+				0A3B0F75252A409D00F953DA /* Web3PromiseKit */,
+				0A3B0F77252A409D00F953DA /* Web3ContractABI */,
+				0A3B0F79252A409D00F953DA /* Web3 */,
+			);
 			productName = MobileFarmInfo;
 			productReference = 0AD5491725291BAE0003C261 /* MobileFarmInfo.app */;
 			productType = "com.apple.product-type.application";
@@ -124,6 +149,9 @@
 				Base,
 			);
 			mainGroup = 0AD5490E25291BAE0003C261;
+			packageReferences = (
+				0A3B0F74252A409D00F953DA /* XCRemoteSwiftPackageReference "Web3" */,
+			);
 			productRefGroup = 0AD5491825291BAE0003C261 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -151,7 +179,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A3B0F7E252A411500F953DA /* EtherscanDataSource.swift in Sources */,
 				0A4A86F1252945F200F03D12 /* FarmViewController.swift in Sources */,
+				0A3B0F86252A48FD00F953DA /* Secrets.swift in Sources */,
 				0AD5491B25291BAE0003C261 /* AppDelegate.swift in Sources */,
 				0A4A86EE2529438700F03D12 /* FarmsViewController.swift in Sources */,
 				0AD5491D25291BAE0003C261 /* SceneDelegate.swift in Sources */,
@@ -355,6 +385,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0A3B0F74252A409D00F953DA /* XCRemoteSwiftPackageReference "Web3" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Boilertalk/Web3.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0A3B0F75252A409D00F953DA /* Web3PromiseKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0A3B0F74252A409D00F953DA /* XCRemoteSwiftPackageReference "Web3" */;
+			productName = Web3PromiseKit;
+		};
+		0A3B0F77252A409D00F953DA /* Web3ContractABI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0A3B0F74252A409D00F953DA /* XCRemoteSwiftPackageReference "Web3" */;
+			productName = Web3ContractABI;
+		};
+		0A3B0F79252A409D00F953DA /* Web3 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0A3B0F74252A409D00F953DA /* XCRemoteSwiftPackageReference "Web3" */;
+			productName = Web3;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0AD5490F25291BAE0003C261 /* Project object */;
 }
