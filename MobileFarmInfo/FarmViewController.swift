@@ -9,7 +9,6 @@ import UIKit
 
 import Web3
 import Web3ContractABI
-import Web3PromiseKit
 
 class FarmViewController: UIViewController {
 
@@ -40,14 +39,16 @@ class FarmViewController: UIViewController {
                 if let contractJsonABI = jsonABIData {
                     // You can optionally pass an abiKey param if the actual abi is nested and not the top level element of the json
                     let contract = try web3.eth.Contract(json: contractJsonABI, abiKey: nil, address: contractAddress)
-                    firstly {
-                        contract["poolLength"]!().call()
-                    }.done { outputs in
-                        self.title = "\(outputs.values.first ?? 0) Pools"
-                    }.catch { error in
-                        print(error)
-                    }
                     
+                    contract["poolLength"]?().call(completion: { (response, error) in
+                        if let error = error {
+                            print(error.localizedDescription)
+                        } else {
+                            DispatchQueue.main.async {
+                                self.title = "\(response?.values.first ?? 0) Pools"
+                            }
+                        }
+                    })
                 }
             } catch let error {
                 print(error.localizedDescription)
