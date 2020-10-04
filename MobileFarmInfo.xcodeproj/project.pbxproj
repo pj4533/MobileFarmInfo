@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0A4A86EE2529438700F03D12 /* FarmsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A86ED2529438700F03D12 /* FarmsViewController.swift */; };
 		0A4A86F1252945F200F03D12 /* FarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A86F0252945F200F03D12 /* FarmViewController.swift */; };
+		0A64080E252955BC004C1381 /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A64080D252955BC004C1381 /* Pool.swift */; };
 		0AD5491B25291BAE0003C261 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD5491A25291BAE0003C261 /* AppDelegate.swift */; };
 		0AD5491D25291BAE0003C261 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD5491C25291BAE0003C261 /* SceneDelegate.swift */; };
 		0AD5492225291BAE0003C261 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AD5492025291BAE0003C261 /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* Begin PBXFileReference section */
 		0A4A86ED2529438700F03D12 /* FarmsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmsViewController.swift; sourceTree = "<group>"; };
 		0A4A86F0252945F200F03D12 /* FarmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmViewController.swift; sourceTree = "<group>"; };
+		0A64080D252955BC004C1381 /* Pool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pool.swift; sourceTree = "<group>"; };
 		0AD5491725291BAE0003C261 /* MobileFarmInfo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileFarmInfo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AD5491A25291BAE0003C261 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0AD5491C25291BAE0003C261 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -39,6 +41,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A64080C252955A7004C1381 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0A64080D252955BC004C1381 /* Pool.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		0AD5490E25291BAE0003C261 = {
 			isa = PBXGroup;
 			children = (
@@ -58,6 +68,7 @@
 		0AD5491925291BAE0003C261 /* MobileFarmInfo */ = {
 			isa = PBXGroup;
 			children = (
+				0A64080C252955A7004C1381 /* Models */,
 				0AD5491A25291BAE0003C261 /* AppDelegate.swift */,
 				0AD5491C25291BAE0003C261 /* SceneDelegate.swift */,
 				0AD5492025291BAE0003C261 /* Main.storyboard */,
@@ -144,6 +155,7 @@
 				0AD5491B25291BAE0003C261 /* AppDelegate.swift in Sources */,
 				0A4A86EE2529438700F03D12 /* FarmsViewController.swift in Sources */,
 				0AD5491D25291BAE0003C261 /* SceneDelegate.swift in Sources */,
+				0A64080E252955BC004C1381 /* Pool.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
