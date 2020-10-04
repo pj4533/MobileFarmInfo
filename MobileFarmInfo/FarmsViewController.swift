@@ -36,7 +36,16 @@ extension FarmsViewController: UITableViewDelegate {
 
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let vc = storyboard.instantiateViewController(withIdentifier: "FarmViewController") as? FarmViewController {
-            self.navigationController?.pushViewController(vc, animated: true)
+            
+            let datasource = PickleDataSource()
+            datasource.loadABI(withSuccess: {
+                vc.datasource = datasource
+                DispatchQueue.main.async {
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            }, failure: nil)
+    
+            
         }
 
     }
@@ -47,6 +56,7 @@ extension FarmsViewController: UITableViewDataSource {
         return 1
     }
     
+    // hardcording pickle for now, making the farm VC generic
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.accessoryType = .disclosureIndicator

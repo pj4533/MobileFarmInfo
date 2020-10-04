@@ -24,41 +24,20 @@ class FarmViewController: UIViewController {
         Pool(name: "Pair name")
     ]
     
+    var datasource : PoolDataSource?
+    
     @IBOutlet weak var tableview: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // hardcoded pickle chef for now
-        let datasource = EtherscanDataSource()
-        datasource.getABI(address: "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d") { (jsonABIData) in
-            
-            do {
-                let web3 = Web3(rpcURL: "https://mainnet.infura.io/v3/\(Secrets().infuraProjectId)")
-
-                let contractAddress = try EthereumAddress(hex: "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d", eip55: true)
-                if let contractJsonABI = jsonABIData {
-                    // You can optionally pass an abiKey param if the actual abi is nested and not the top level element of the json
-                    let contract = try web3.eth.Contract(json: contractJsonABI, abiKey: nil, address: contractAddress)
-                    
-                    contract["poolLength"]?().call(completion: { (response, error) in
-                        if let error = error {
-                            print(error.localizedDescription)
-                        } else {
-                            DispatchQueue.main.async {
-                                self.title = "\(response?.values.first ?? 0) Pools"
-                            }
-                        }
-                    })
-                }
-            } catch let error {
-                print(error.localizedDescription)
+        
+        self.datasource?.getPoolCount(withSuccess: { (poolCount) in
+            DispatchQueue.main.async {
+                self.title = "\(poolCount) Pools"
+                self.tableview.reloadData()
             }
-
-            
-        } failure: { (error) in
+        }, failure: { (error) in
             print(error?.localizedDescription ?? "Unknown error")
-        }
-
+        })
     }
     
 
@@ -88,6 +67,20 @@ extension FarmViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
 //        let pool = self.pools[indexPath.section]
+
+        
+        // from here use token address to get info based on the type -- in pickle the first one is LP token
+        // so uniswap type. I can use infura and pass the UNI ABI, but I think I could also query direct to
+        // uniswaps API. but maybe I'll need to use the ABI for other types? not sure how to tell the different pool types
+        // apart?
+        //
+        // also may want to precache this stuff so I dont do a ton of calls to Infura?
+        self.datasource?.getTokenAddress(forPoolIndex: indexPath.section, withSuccess: { (address) in
+            print(address.hex(eip55: false))
+        }, failure: { (error) in
+            print(error?.localizedDescription ?? "Unknown error")
+        })
+        
         
         switch self.cells[indexPath.row] {
         case .header:
