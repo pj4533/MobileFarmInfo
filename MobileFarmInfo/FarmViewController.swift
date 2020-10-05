@@ -20,9 +20,7 @@ class FarmViewController: UIViewController {
         .header
     ]
     
-    let pools : [Pool] = [
-        Pool(name: "Pair name")
-    ]
+    var pools : [Pool] = []
     
     var datasource : PoolDataSource?
     
@@ -33,8 +31,26 @@ class FarmViewController: UIViewController {
         self.datasource?.getPoolCount(withSuccess: { (poolCount) in
             DispatchQueue.main.async {
                 self.title = "\(poolCount) Pools"
-                self.tableview.reloadData()
             }
+            
+            // should loop thru, doing 1 for now
+            self.datasource?.getTokenAddress(forPoolIndex: 0, withSuccess: { (address) in
+                let pairAddress = address.hex(eip55: false)
+                let uniswapDataSource = UniswapDataSource()
+                uniswapDataSource.getPair(address: pairAddress) { (pair) in
+                    if let pair = pair {
+                        self.pools.append(pair.getPool())
+                    }
+                    
+                    self.tableview.reloadData()
+                } failure: { (error) in
+                    print(error?.localizedDescription ?? "Unknown error")
+                }
+            }, failure: { (error) in
+                print(error?.localizedDescription ?? "Unknown error")
+            })
+
+            
         }, failure: { (error) in
             print(error?.localizedDescription ?? "Unknown error")
         })
@@ -54,6 +70,10 @@ class FarmViewController: UIViewController {
 }
 
 extension FarmViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.pools.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.cells.count
     }
@@ -66,7 +86,7 @@ extension FarmViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-//        let pool = self.pools[indexPath.section]
+        let pool = self.pools[indexPath.section]
 
         
         // from here use token address to get info based on the type -- in pickle the first one is LP token
@@ -75,16 +95,10 @@ extension FarmViewController: UITableViewDataSource {
         // apart?
         //
         // also may want to precache this stuff so I dont do a ton of calls to Infura?
-        self.datasource?.getTokenAddress(forPoolIndex: indexPath.section, withSuccess: { (address) in
-            print(address.hex(eip55: false))
-        }, failure: { (error) in
-            print(error?.localizedDescription ?? "Unknown error")
-        })
-        
         
         switch self.cells[indexPath.row] {
         case .header:
-            cell.textLabel?.text = "header"
+            cell.textLabel?.text = String(format: "$%.8f", pool.price)
         default:
             print("unknown")
         }

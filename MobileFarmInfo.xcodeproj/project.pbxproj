@@ -14,6 +14,11 @@
 		0A3B0F86252A48FD00F953DA /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3B0F85252A48FD00F953DA /* Secrets.swift */; };
 		0A4A86EE2529438700F03D12 /* FarmsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A86ED2529438700F03D12 /* FarmsViewController.swift */; };
 		0A4A86F1252945F200F03D12 /* FarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A86F0252945F200F03D12 /* FarmViewController.swift */; };
+		0A5E6AD0252AC01C0033DD2C /* ABIDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E6ACF252AC01C0033DD2C /* ABIDataSource.swift */; };
+		0A5E6AD3252AC3AD0033DD2C /* UniswapDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E6AD2252AC3AD0033DD2C /* UniswapDataSource.swift */; };
+		0A5E6ADA252AC6A90033DD2C /* Pair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E6AD9252AC6A90033DD2C /* Pair.swift */; };
+		0A5E6ADD252AC6B50033DD2C /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E6ADC252AC6B50033DD2C /* Token.swift */; };
+		0A5E6AE0252ACB200033DD2C /* UniswapPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E6ADF252ACB200033DD2C /* UniswapPool.swift */; };
 		0A64080E252955BC004C1381 /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A64080D252955BC004C1381 /* Pool.swift */; };
 		0AADB0CD252A5C0500D7C7E0 /* PoolDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AADB0CC252A5C0500D7C7E0 /* PoolDataSource.swift */; };
 		0AADB0D0252A5CB400D7C7E0 /* PickleDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AADB0CF252A5CB400D7C7E0 /* PickleDataSource.swift */; };
@@ -29,6 +34,11 @@
 		0A3B0F85252A48FD00F953DA /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		0A4A86ED2529438700F03D12 /* FarmsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmsViewController.swift; sourceTree = "<group>"; };
 		0A4A86F0252945F200F03D12 /* FarmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmViewController.swift; sourceTree = "<group>"; };
+		0A5E6ACF252AC01C0033DD2C /* ABIDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABIDataSource.swift; sourceTree = "<group>"; };
+		0A5E6AD2252AC3AD0033DD2C /* UniswapDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniswapDataSource.swift; sourceTree = "<group>"; };
+		0A5E6AD9252AC6A90033DD2C /* Pair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pair.swift; sourceTree = "<group>"; };
+		0A5E6ADC252AC6B50033DD2C /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		0A5E6ADF252ACB200033DD2C /* UniswapPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniswapPool.swift; sourceTree = "<group>"; };
 		0A64080D252955BC004C1381 /* Pool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pool.swift; sourceTree = "<group>"; };
 		0AADB0CC252A5C0500D7C7E0 /* PoolDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolDataSource.swift; sourceTree = "<group>"; };
 		0AADB0CF252A5CB400D7C7E0 /* PickleDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickleDataSource.swift; sourceTree = "<group>"; };
@@ -61,14 +71,27 @@
 				0A3B0F7D252A411500F953DA /* EtherscanDataSource.swift */,
 				0AADB0CC252A5C0500D7C7E0 /* PoolDataSource.swift */,
 				0AADB0CF252A5CB400D7C7E0 /* PickleDataSource.swift */,
+				0A5E6ACF252AC01C0033DD2C /* ABIDataSource.swift */,
+				0A5E6AD2252AC3AD0033DD2C /* UniswapDataSource.swift */,
 			);
 			path = DataSources;
+			sourceTree = "<group>";
+		};
+		0A5E6AD8252AC6A90033DD2C /* Uniswap */ = {
+			isa = PBXGroup;
+			children = (
+				0A5E6AD9252AC6A90033DD2C /* Pair.swift */,
+				0A5E6ADC252AC6B50033DD2C /* Token.swift */,
+			);
+			path = Uniswap;
 			sourceTree = "<group>";
 		};
 		0A64080C252955A7004C1381 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0A5E6AD8252AC6A90033DD2C /* Uniswap */,
 				0A64080D252955BC004C1381 /* Pool.swift */,
+				0A5E6ADF252ACB200033DD2C /* UniswapPool.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -185,15 +208,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A5E6AD3252AC3AD0033DD2C /* UniswapDataSource.swift in Sources */,
 				0A3B0F7E252A411500F953DA /* EtherscanDataSource.swift in Sources */,
 				0A4A86F1252945F200F03D12 /* FarmViewController.swift in Sources */,
+				0A5E6AE0252ACB200033DD2C /* UniswapPool.swift in Sources */,
 				0AADB0D0252A5CB400D7C7E0 /* PickleDataSource.swift in Sources */,
 				0A3B0F86252A48FD00F953DA /* Secrets.swift in Sources */,
+				0A5E6ADA252AC6A90033DD2C /* Pair.swift in Sources */,
 				0AD5491B25291BAE0003C261 /* AppDelegate.swift in Sources */,
 				0AADB0CD252A5C0500D7C7E0 /* PoolDataSource.swift in Sources */,
 				0A4A86EE2529438700F03D12 /* FarmsViewController.swift in Sources */,
 				0AD5491D25291BAE0003C261 /* SceneDelegate.swift in Sources */,
 				0A64080E252955BC004C1381 /* Pool.swift in Sources */,
+				0A5E6ADD252AC6B50033DD2C /* Token.swift in Sources */,
+				0A5E6AD0252AC01C0033DD2C /* ABIDataSource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

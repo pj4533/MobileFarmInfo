@@ -7,6 +7,7 @@
 
 import Foundation
 
-struct Pool : Codable {
-    var name : String?
+protocol Pool {
+    var name : String { get }
+    var price : Double { get }
 }
