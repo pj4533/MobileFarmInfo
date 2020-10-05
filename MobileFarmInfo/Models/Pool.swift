@@ -10,4 +10,7 @@ import Foundation
 protocol Pool {
     var name : String { get }
     var price : Double { get }
+    var tvl : Double { get }
+    var token0 : Token? { get }    
+    var token1 : Token? { get }
 }

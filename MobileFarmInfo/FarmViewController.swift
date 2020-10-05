@@ -13,12 +13,11 @@ import Web3ContractABI
 class FarmViewController: UIViewController {
 
     enum CellTypes {
-        case header, token1, token2, totalStaked, rewards, apy, staked, earnings
+        case header, token0, token1, totalStaked, rewards, apy, staked, earnings
     }
-    
-    let cells : [CellTypes] = [
-        .header
-    ]
+
+    var ethPrice : Double?
+    var cells : [[CellTypes]] = []
     
     var pools : [Pool] = []
     
@@ -28,32 +27,46 @@ class FarmViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.datasource?.getPoolCount(withSuccess: { (poolCount) in
-            DispatchQueue.main.async {
-                self.title = "\(poolCount) Pools"
-            }
-            
-            // should loop thru, doing 1 for now
-            self.datasource?.getTokenAddress(forPoolIndex: 0, withSuccess: { (address) in
-                let pairAddress = address.hex(eip55: false)
-                let uniswapDataSource = UniswapDataSource()
-                uniswapDataSource.getPair(address: pairAddress) { (pair) in
-                    if let pair = pair {
-                        self.pools.append(pair.getPool())
-                    }
-                    
-                    self.tableview.reloadData()
-                } failure: { (error) in
-                    print(error?.localizedDescription ?? "Unknown error")
+        let cgDataSource = CoinGeckoDataSource()
+        cgDataSource.getETHPrice { (ethPrice) in
+            self.ethPrice = ethPrice
+            self.datasource?.getPoolCount(withSuccess: { (poolCount) in
+                DispatchQueue.main.async {
+                    self.title = "\(poolCount) Pools"
                 }
+                
+                // should loop thru, doing 1 for now
+                self.datasource?.getTokenAddress(forPoolIndex: 0, withSuccess: { (address) in
+                    let pairAddress = address.hex(eip55: false)
+                    let uniswapDataSource = UniswapDataSource()
+                    uniswapDataSource.getPair(address: pairAddress) { (pair) in
+                        if let pair = pair {
+                            let pool = pair.getPool()
+                            
+                            var cellsForPool : [CellTypes] = [ .header ]
+                            if pool.token0 != nil { cellsForPool.append(.token0) }
+                            if pool.token1 != nil { cellsForPool.append(.token1) }
+
+                            self.cells.append(cellsForPool)
+                            self.pools.append(pool)
+                        }
+                        
+                        self.tableview.reloadData()
+                    } failure: { (error) in
+                        print(error?.localizedDescription ?? "Unknown error")
+                    }
+                }, failure: { (error) in
+                    print(error?.localizedDescription ?? "Unknown error")
+                })
+
+                
             }, failure: { (error) in
                 print(error?.localizedDescription ?? "Unknown error")
             })
+        } failure: { (error) in
+            print(error?.localizedDescription ?? "Unknown coin gecko error")
+        }
 
-            
-        }, failure: { (error) in
-            print(error?.localizedDescription ?? "Unknown error")
-        })
     }
     
 
@@ -71,11 +84,11 @@ class FarmViewController: UIViewController {
 
 extension FarmViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.pools.count
+        return self.cells.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.cells.count
+        return self.cells[section].count
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -84,10 +97,9 @@ extension FarmViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         let pool = self.pools[indexPath.section]
-
+        let cellsForPool = self.cells[indexPath.section]
         
         // from here use token address to get info based on the type -- in pickle the first one is LP token
         // so uniswap type. I can use infura and pass the UNI ABI, but I think I could also query direct to
@@ -96,13 +108,29 @@ extension FarmViewController: UITableViewDataSource {
         //
         // also may want to precache this stuff so I dont do a ton of calls to Infura?
         
-        switch self.cells[indexPath.row] {
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.numberStyle = .currency
+        switch cellsForPool[indexPath.row] {
         case .header:
-            cell.textLabel?.text = String(format: "$%.8f", pool.price)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "subtitleCell", for: indexPath)
+            cell.textLabel?.text = "UNI Price: \(currencyFormatter.string(from: NSNumber(value: pool.price)) ?? "$0")"
+            cell.detailTextLabel?.text = "TVL: \(currencyFormatter.string(from: NSNumber(value: pool.tvl)) ?? "$0")"
+            return cell
+        case .token0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            
+            cell.textLabel?.text = "\(pool.token0?.symbol ?? "?") Price: \(currencyFormatter.string(from: NSNumber(value: pool.token0?.usdMarketPrice(withEtherPrice: self.ethPrice ?? 0) ?? 0)) ?? "$0")"
+            return cell
+        case .token1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            cell.textLabel?.text = "\(pool.token1?.symbol ?? "?") Price: \(currencyFormatter.string(from: NSNumber(value: pool.token1?.usdMarketPrice(withEtherPrice: self.ethPrice ?? 0) ?? 0)) ?? "$0")"
+            return cell
         default:
             print("unknown")
         }
                 
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         return cell
     }
 }

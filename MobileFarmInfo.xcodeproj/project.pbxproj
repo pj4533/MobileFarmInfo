@@ -27,6 +27,7 @@
 		0AD5492225291BAE0003C261 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AD5492025291BAE0003C261 /* Main.storyboard */; };
 		0AD5492425291BB20003C261 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AD5492325291BB20003C261 /* Assets.xcassets */; };
 		0AD5492725291BB20003C261 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AD5492525291BB20003C261 /* LaunchScreen.storyboard */; };
+		0AE6D0D0252BB77B00FBFD2E /* CoinGeckoDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE6D0CF252BB77B00FBFD2E /* CoinGeckoDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		0AD5492325291BB20003C261 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0AD5492625291BB20003C261 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0AD5492825291BB20003C261 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0AE6D0CF252BB77B00FBFD2E /* CoinGeckoDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoinGeckoDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 		0A3B0F7C252A410400F953DA /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				0AE6D0CF252BB77B00FBFD2E /* CoinGeckoDataSource.swift */,
 				0A3B0F7D252A411500F953DA /* EtherscanDataSource.swift */,
 				0AADB0CC252A5C0500D7C7E0 /* PoolDataSource.swift */,
 				0AADB0CF252A5CB400D7C7E0 /* PickleDataSource.swift */,
@@ -210,6 +213,7 @@
 			files = (
 				0A5E6AD3252AC3AD0033DD2C /* UniswapDataSource.swift in Sources */,
 				0A3B0F7E252A411500F953DA /* EtherscanDataSource.swift in Sources */,
+				0AE6D0D0252BB77B00FBFD2E /* CoinGeckoDataSource.swift in Sources */,
 				0A4A86F1252945F200F03D12 /* FarmViewController.swift in Sources */,
 				0A5E6AE0252ACB200033DD2C /* UniswapPool.swift in Sources */,
 				0AADB0D0252A5CB400D7C7E0 /* PickleDataSource.swift in Sources */,

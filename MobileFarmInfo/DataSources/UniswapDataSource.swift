@@ -11,7 +11,7 @@ class UniswapDataSource {
     
     func getPair(address: String, withSuccess success: ((_ pair: Pair?) -> Void)?, failure: ((_ error: Error?) -> Void)? ) {
         let parameters : [String:Any] = [
-            "query" : "query($id: String!) {  pair(id:$id) { id totalSupply token0Price token1Price volumeToken0 volumeToken1 token0 { symbol decimals } token1 { symbol decimals } }  }",
+            "query" : "query($id: String!) {  pair(id:$id) { id totalSupply reserveUSD reserve0 reserve1 token0Price token1Price volumeToken0 volumeToken1 token0 { symbol decimals derivedETH } token1 { symbol decimals derivedETH } }  }",
             "variables" : [
                 "id" : address.lowercased()
             ]
