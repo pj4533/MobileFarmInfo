@@ -35,29 +35,53 @@ class FarmViewController: UIViewController {
                     self.title = "\(poolCount) Pools"
                 }
                 
+                let group = DispatchGroup()
+                
                 // should loop thru, doing 1 for now
-                self.datasource?.getTokenAddress(forPoolIndex: 0, withSuccess: { (address) in
-                    let pairAddress = address.hex(eip55: false)
-                    let uniswapDataSource = UniswapDataSource()
-                    uniswapDataSource.getPair(address: pairAddress) { (pair) in
-                        if let pair = pair {
-                            let pool = pair.getPool()
-                            
-                            var cellsForPool : [CellTypes] = [ .header ]
-                            if pool.token0 != nil { cellsForPool.append(.token0) }
-                            if pool.token1 != nil { cellsForPool.append(.token1) }
+                for i in 0...5 {//Int(poolCount) {
+                    group.enter()
+                    self.datasource?.getTokenAddress(forPoolIndex: i, withSuccess: { (address) in
+                        group.leave()
+                        let pairAddress = address.hex(eip55: false)
+                        let uniswapDataSource = UniswapDataSource()
+                        group.enter()
+                        uniswapDataSource.getPair(address: pairAddress) { (pair) in
+                            group.leave()
+                            if let pair = pair {
+                                var pool = pair.getPool()
+                                
+                                print("Loading: \(pairAddress)")
+                                group.enter()
+                                uniswapDataSource.getToken(address: pairAddress) { (lpToken) in
+                                    print(lpToken)
+                                    pool.lpToken = lpToken
 
-                            self.cells.append(cellsForPool)
-                            self.pools.append(pool)
+                                    var cellsForPool : [CellTypes] = [ .header ]
+
+                                    if pool.token0 != nil { cellsForPool.append(.token0) }
+                                    if pool.token1 != nil { cellsForPool.append(.token1) }
+                                    
+                                    // leaving this out for now, stuck on getting this number right
+    //                                cellsForPool.append(.totalStaked)
+
+                                    self.cells.append(cellsForPool)
+                                    self.pools.append(pool)
+                                    group.leave()
+                                } failure: { (error) in
+                                    print(error?.localizedDescription ?? "Unknown error")
+                                }
+                            }
+                        } failure: { (error) in
+                            print(error?.localizedDescription ?? "Unknown error")
                         }
-                        
-                        self.tableview.reloadData()
-                    } failure: { (error) in
+                    }, failure: { (error) in
                         print(error?.localizedDescription ?? "Unknown error")
-                    }
-                }, failure: { (error) in
-                    print(error?.localizedDescription ?? "Unknown error")
-                })
+                    })
+                }
+
+                group.notify(queue: DispatchQueue.main) {
+                    self.tableview.reloadData()
+                }
 
                 
             }, failure: { (error) in
@@ -125,6 +149,12 @@ extension FarmViewController: UITableViewDataSource {
         case .token1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             cell.textLabel?.text = "\(pool.token1?.symbol ?? "?") Price: \(currencyFormatter.string(from: NSNumber(value: pool.token1?.usdMarketPrice(withEtherPrice: self.ethPrice ?? 0) ?? 0)) ?? "$0")"
+            return cell
+        case .totalStaked:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            self.datasource?.getTotalStaked(forToken: pool.lpToken, withSuccess: { (totalStaked) in
+                cell.textLabel?.text = "Staked: \(currencyFormatter.string(from: NSNumber(value: totalStaked)) ?? "$0")"
+            }, failure: nil)
             return cell
         default:
             print("unknown")

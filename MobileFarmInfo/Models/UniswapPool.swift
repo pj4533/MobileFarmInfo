@@ -14,4 +14,5 @@ struct UniswapPool : Pool {
     
     var token0: Token?
     var token1: Token?
+    var lpToken: Token?
 }

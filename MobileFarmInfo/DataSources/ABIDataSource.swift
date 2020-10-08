@@ -11,8 +11,8 @@ import Web3ContractABI
 
 class ABIDataSource {
     private var jsonABIData : Data?
-    private let web3 = Web3(rpcURL: "https://mainnet.infura.io/v3/\(Secrets().infuraProjectId)")
     
+    let web3 = Web3(rpcURL: "https://mainnet.infura.io/v3/\(Secrets().infuraProjectId)")    
     var contract : DynamicContract?
     
     func loadABI(forAddress address: String, withSuccess success: (() -> Void)?, failure: ((Error?) -> Void)?) {

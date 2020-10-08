@@ -13,4 +13,5 @@ protocol Pool {
     var tvl : Double { get }
     var token0 : Token? { get }    
     var token1 : Token? { get }
+    var lpToken : Token? { get }
 }
