@@ -10,7 +10,7 @@ import Foundation
 class EtherscanDataSource {
     func getABI(address: String, withSuccess success: ((_ contractABIData: Data? ) -> Void)?, failure: ((_ error: Error?) -> Void)? ) {
                 
-        let url = URL(string: "https://api.etherscan.io/api?module=contract&action=getabi&address=\(address)")!
+        let url = URL(string: "https://api.etherscan.io/api?module=contract&action=getabi&address=\(address)&apikey=\(Secrets().etherscanKey)")!
         let request = URLRequest(url: url)
         
         struct EtherscanResponse : Codable {
@@ -23,7 +23,11 @@ class EtherscanDataSource {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let response = try decoder.decode(EtherscanResponse.self, from: data)
-                    success?(response.result?.data(using: .utf8))
+                    if response.result?.contains("Max rate limit reached") ?? false {
+                        failure?(NSError(domain: "Rate limit reached", code: -1, userInfo: nil))
+                    } else {
+                        success?(response.result?.data(using: .utf8))
+                    }
                 } catch let error {
                     print(error)
                 }

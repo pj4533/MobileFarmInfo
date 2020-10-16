@@ -35,55 +35,46 @@ class FarmViewController: UIViewController {
                     self.title = "\(poolCount) Pools"
                 }
                 
-                let group = DispatchGroup()
                 
                 // should loop thru, doing 1 for now
-                for i in 0...5 {//Int(poolCount) {
-                    group.enter()
-                    self.datasource?.getTokenAddress(forPoolIndex: i, withSuccess: { (address) in
-                        group.leave()
-                        let pairAddress = address.hex(eip55: false)
-                        let uniswapDataSource = UniswapDataSource()
-                        group.enter()
-                        uniswapDataSource.getPair(address: pairAddress) { (pair) in
-                            group.leave()
-                            if let pair = pair {
-                                var pool = pair.getPool()
-                                
-                                print("Loading: \(pairAddress)")
-                                group.enter()
-                                uniswapDataSource.getToken(address: pairAddress) { (lpToken) in
-                                    print(lpToken)
-                                    pool.lpToken = lpToken
+                DispatchQueue(label: "looper").async {
+                    for i in 0...Int(poolCount-1) {
+                        let semaphore = DispatchSemaphore(value: 0)
+                        print("Waiting for pool id \(i)")
+                        
+                        
+                        DispatchQueue(label: "worker").asyncAfter(deadline: .now() + 0.25, execute: {
+                            self.datasource?.getAddress(forPoolIndex: i, withSuccess: { (address) in
+                                let poolAddress = address.hex(eip55: true)
 
-                                    var cellsForPool : [CellTypes] = [ .header ]
-
-                                    if pool.token0 != nil { cellsForPool.append(.token0) }
-                                    if pool.token1 != nil { cellsForPool.append(.token1) }
-                                    
-                                    // leaving this out for now, stuck on getting this number right
-    //                                cellsForPool.append(.totalStaked)
-
-                                    self.cells.append(cellsForPool)
-                                    self.pools.append(pool)
-                                    group.leave()
+                                let abiChecker = ABIDataSource()
+                                abiChecker.getPoolType(forAddress: poolAddress) { (poolType) in
+                                    if poolType == .uni {
+                                        self.loadUNIPool(withAddress: poolAddress) {
+                                            DispatchQueue.main.async {
+                                                self.tableview.reloadData()
+                                            }
+                                            semaphore.signal()
+                                        } failure: { (error) in
+                                            semaphore.signal()
+                                        }
+                                    } else {
+                                        semaphore.signal()
+                                    }
                                 } failure: { (error) in
-                                    print(error?.localizedDescription ?? "Unknown error")
+                                    print("Error getting pool type - Address: \(poolAddress) \(error?.localizedDescription ?? "Unknown error")")
+                                    semaphore.signal()
                                 }
-                            }
-                        } failure: { (error) in
-                            print(error?.localizedDescription ?? "Unknown error")
-                        }
-                    }, failure: { (error) in
-                        print(error?.localizedDescription ?? "Unknown error")
-                    })
-                }
+                            }, failure: { (error) in
+                                print("Error getting pool address - \(error?.localizedDescription ?? "Unknown error")")
+                            })
 
-                group.notify(queue: DispatchQueue.main) {
-                    self.tableview.reloadData()
-                }
+                        })
 
-                
+                        semaphore.wait()
+                    }
+
+                }
             }, failure: { (error) in
                 print(error?.localizedDescription ?? "Unknown error")
             })
@@ -93,6 +84,31 @@ class FarmViewController: UIViewController {
 
     }
     
+    func loadUNIPool(withAddress address: String, withSuccess success: (() -> Void)?, failure: ((Error?) -> Void)?) {
+        print("UNI Pair Address: \(address)")
+        let uniswapDataSource = UniswapDataSource()
+        uniswapDataSource.getPair(address: address, withSuccess: { (pair) in
+            if let pair = pair {
+                var pool = pair.getPool()
+
+                uniswapDataSource.getToken(address: address, withSuccess: { (lpToken) in
+                    pool.lpToken = lpToken
+
+                    var cellsForPool : [CellTypes] = [ .header ]
+
+                    if pool.token0 != nil { cellsForPool.append(.token0) }
+                    if pool.token1 != nil { cellsForPool.append(.token1) }
+
+                    // leaving this out for now, stuck on getting this number right
+//                                cellsForPool.append(.totalStaked)
+
+                    self.cells.append(cellsForPool)
+                    self.pools.append(pool)
+                    success?()
+                }, failure: failure)
+            }
+        }, failure: failure)
+    }
 
     /*
     // MARK: - Navigation

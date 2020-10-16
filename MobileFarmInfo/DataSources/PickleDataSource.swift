@@ -30,7 +30,7 @@ class PickleDataSource : ABIDataSource, PoolDataSource {
         })
     }
     
-    func getTokenAddress(forPoolIndex poolIndex: Int, withSuccess success: ((EthereumAddress) -> Void)?, failure: ((Error?) -> Void)?) {
+    func getAddress(forPoolIndex poolIndex: Int, withSuccess success: ((EthereumAddress) -> Void)?, failure: ((Error?) -> Void)?) {
         self.contract?["poolInfo"]?(poolIndex).call(completion: { (response, error) in
             if let error = error {
                 failure?(error)
